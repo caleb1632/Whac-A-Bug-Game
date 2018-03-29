@@ -14,9 +14,6 @@ GameMaster::GameMaster():currentPlayer(NULL){
 
 
 GameMaster::~GameMaster(){
-//  if(currentPlayer){
-//	delete [] currentPlayer;
-//  }
 }
 
 
