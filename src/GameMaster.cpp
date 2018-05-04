@@ -17,8 +17,7 @@ GameMaster::~GameMaster(){
 }
 
 
-//\/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Board\/Creation~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\/
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+//Board Creation
 bool GameMaster::GameSetup(){
   BoardSetUp();
   LoadPlayers();
@@ -26,16 +25,12 @@ bool GameMaster::GameSetup(){
   LoadArmament();
   return 0;
 }
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
   bool GameMaster::BoardSetUp(){
 	playerVec = Board::CreateBoard(NUMROWS, NUMCOLS);
 	return !playerVec.empty();
   }
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 bool GameMaster::LoadPlayers(){
   ifstream indata;
   char ptype;
@@ -89,9 +84,7 @@ bool GameMaster::LoadPlayers(){
   indata.close();
   return !squadMap.empty();
 }
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 bool GameMaster::LoadQueue(void){
   VecPlayerType pvec = playerVec;
   sort(pvec.begin(), pvec.end(), Compare);
@@ -101,9 +94,7 @@ bool GameMaster::LoadQueue(void){
   }
   return !playerQue.empty();
 }
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 bool GameMaster::LoadArmament(void){
   ifstream indata;
   char wtype;
@@ -123,22 +114,18 @@ bool GameMaster::LoadArmament(void){
   indata.close();
   return !armamentVec.empty();
 }
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 bool GameMaster::GameCleanUp(void){
   for(int i=0;i<playerVec.size();i++){
 	delete playerVec[i];
   }
   return 0;
 }
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-///\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Board/\Creation~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/\
 
 
 
-//\/++++++++++++++++++++++++++++++++Game\/Play+++++++++++++++++++++++++++++++++\/
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+//Game Play
 void GameMaster::PlayGame(void){
   GameSpace::BeginGame(playerQue, liveSetVec, squadMap, armamentVec);
   while(!EndGame()){
@@ -154,9 +141,7 @@ void GameMaster::PlayGame(void){
   
   return;
 }
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void GameMaster::PreTurn(void){
   playerQue.pop();
   currentPlayer->ResetMomentum();
@@ -167,17 +152,13 @@ void GameMaster::PreTurn(void){
   }
   return;
 }
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void GameMaster::BugTurn(void){
   if(currentPlayer->IsActive())
 	currentPlayer->Move();
   return;
 }
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void GameMaster::HumanTurn(void){
   if(currentPlayer->IsActive()){
 	switch(MenuType.mm){
@@ -197,9 +178,7 @@ void GameMaster::HumanTurn(void){
   }
   return;
 }
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void GameMaster::PostTurn(void){
   
   if(PlayerInSquad()){
@@ -217,9 +196,7 @@ void GameMaster::PostTurn(void){
 
   return;
 }
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void GameMaster::GetWeapon(){
   int squadNum = 0;
   Weapon::WeaponType curWep;
@@ -245,9 +222,7 @@ void GameMaster::GetWeapon(){
   return;
 }
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void GameMaster::GameOver(void){
 //  if(currentPlayer)
 //	delete [] currentPlayer;
@@ -255,19 +230,14 @@ void GameMaster::GameOver(void){
   GameCleanUp();
   return;
 }
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-///\++++++++++++++++++++++++++++++++Game/\Play+++++++++++++++++++++++++++++++++/\
 
 
+//Helper Methods
 
-//\/------------------------------Helper\/Methods------------------------------\/
-/*-------------------------------------------------------*/
 bool Compare(Player* p1, Player* p2){
   return p1->operator<(*p2);
 }
-/*-------------------------------------------------------*/
 
-/*-------------------------------------------------------*/
 bool GameMaster::SquadIsAlive(void){
   VecSetType::iterator i = liveSetVec.begin();
   int liveSquads = 0;
@@ -284,9 +254,7 @@ bool GameMaster::SquadIsAlive(void){
   }
   return squads;
 }
-/*-------------------------------------------------------*/
 
-/*-------------------------------------------------------*/
 bool GameMaster::PlayerInSquad(void){
   if(squadMap.find(currentPlayer->Name())!=squadMap.end()){
 	return true;
@@ -294,9 +262,7 @@ bool GameMaster::PlayerInSquad(void){
 	return false;
   }
 }
-/*-------------------------------------------------------*/
 
-/*-------------------------------------------------------*/
 bool GameMaster::EndGame(void){
   bool endGame = false;
   
@@ -311,21 +277,15 @@ bool GameMaster::EndGame(void){
   }	
   return endGame;
 }
-/*-------------------------------------------------------*/
 
-/*-------------------------------------------------------*/
 int GameMaster::SquadNumber(void){ 
   return squadMap[currentPlayer->Name()];
 }
-/*-------------------------------------------------------*/
 
-/*-------------------------------------------------------*/
 string GameMaster::SquadString(void){
   return SquadToStr(squadMap[currentPlayer->Name()]);
 }
-/*-------------------------------------------------------*/
 
-/*-------------------------------------------------------*/
 Weapon::WeaponType GameMaster::TypeFromChar(char c){
   int pos = 0;
   switch(c){
@@ -347,9 +307,6 @@ Weapon::WeaponType GameMaster::TypeFromChar(char c){
   }
   return Weapon::WeaponType(pos);
 }
-/*-------------------------------------------------------*/
-///\------------------------------Helper/\Methods------------------------------/\
-
 
 
 int main(){
